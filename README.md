@@ -1,6 +1,6 @@
-# 📝 FastAPI Summarize
+# 📝 AI Text Summarization
 
-API สำหรับสรุปข้อความด้วย AI (Text Summarization) พัฒนาด้วย FastAPI และ Hugging Face Transformers
+สรุปข้อความด้วย AI พัฒนาด้วย FastAPI และ Hugging Face Transformers
 
 ## 📋 สารบัญ
 
@@ -169,21 +169,13 @@ cp .env.example .env
 
 #### ⚡ Quick Start (รัน Backend + Frontend พร้อมกัน)
 ```bash
-# Windows
-start.bat
-
-# หรือใช้ Python
 uv run python run.py
 ```
-
+แนะนำให้ run แยกเมื่อต้อง dev
 #### 🔧 รันแยกส่วน
 
 **Backend เท่านั้น:**
 ```bash
-# Windows
-start_backend.bat
-
-# หรือใช้ command line
 uv run uvicorn main:app --reload
 ```
 🌐 API: `http://localhost:8000`  
@@ -191,10 +183,6 @@ uv run uvicorn main:app --reload
 
 **Frontend เท่านั้น:**
 ```bash
-# Windows
-start_frontend.bat
-
-# หรือใช้ command line
 uv run streamlit run frontend.py
 ```
 🎨 Streamlit UI: `http://localhost:8501`
@@ -411,13 +399,3 @@ uv run uvicorn main:app --reload
 - ครั้งแรกจะดาวน์โหลดและ cache ไว้
 
 ---
-
-## 📄 License
-
-MIT License
-
----
-
-## 👨‍💻 Author
-, Streamlit,
-Created with ❤️ using FastAPI and UV

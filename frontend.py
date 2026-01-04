@@ -12,270 +12,274 @@ API_V1_PREFIX = "/api/v1"
 
 # Page config
 st.set_page_config(
-    page_title="🌾 AI สรุปข้อความ - ฉบับอีสาน",
-    page_icon="🌾",
+    page_title="� AI สรุปข้อความ - หนองบัวลำภู",
+    page_icon="🌸",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS - Isan Theme (Harmonious Colors)
+# Custom CSS - Nong Bua Lamphu Theme (ธีมหนองบัวลำภู)
 st.markdown("""
 <style>
     /* Import Thai Font */
     @import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700&family=Sarabun:wght@400;600;700&display=swap');
     
-    /* Color Palette - อีสานสีสัมพันธ์
-       Primary: #8B0000 (แดงเข้ม)
-       Secondary: #DC143C (แดงสด)  
-       Accent: #FFD700 (ทอง)
-       Light: #FFF5E1 (ครีมอ่อน)
-       Dark: #3D1F00 (น้ำตาลเข้ม)
+    /* Color Palette - หนองบัวลำภู
+       Primary: #9C27B0 (ม่วงบัวหลวง)
+       Secondary: #E91E63 (ชมพูบัว)  
+       Accent: #4CAF50 (เขียวธรรมชาติ)
+       Water: #2196F3 (น้ำเงินทะเลบัว)
+       Sky: #87CEEB (ฟ้าสดใส)
+       Gold: #FFD700 (ทองพระธาตุ)
+       Light: #F3E5F5 (ม่วงอ่อน)
+       Dark: #4A148C (ม่วงเข้ม)
     */
     
     * {
         font-family: 'Sarabun', 'Bai Jamjuree', sans-serif;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     
-    /* Main Background - โทนครีมอบอุ่น */
+    /* Main Background - โทนฟ้าน้ำทะเลบัว */
     .stApp {
-        background: linear-gradient(135deg, #FFF9F0 0%, #FFF5E1 50%, #FFEFD5 100%);
+        background: linear-gradient(135deg, #E1F5FE 0%, #F3E5F5 50%, #E8EAF6 100%);
         background-image: 
-            repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(139,0,0,0.015) 15px, rgba(139,0,0,0.015) 30px);
+            repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(156,39,176,0.02) 15px, rgba(156,39,176,0.02) 30px);
     }
     
-    /* Header - Gradient สีอีสาน */
+    /* Header - Gradient สีบัวหลวง */
     .main-header {
-        font-size: 5rem !important;
+        font-size: 3.5rem !important;
         font-weight: 800 !important;
-        background: linear-gradient(120deg, #8B0000, #DC143C, #FF6347, #FFD700);
+        background: linear-gradient(120deg, #9C27B0, #E91E63, #2196F3, #FFD700);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         text-align: center;
         margin: 2rem 0 1rem 0;
-        filter: drop-shadow(3px 3px 5px rgba(139,0,0,0.3));
+        filter: drop-shadow(3px 3px 5px rgba(156,39,176,0.3));
         font-family: 'Bai Jamjuree', sans-serif;
         letter-spacing: 4px;
         line-height: 1.2;
     }
     
     .sub-header {
-        font-size: 2rem !important;
-        color: #8B0000 !important;
+        font-size: 1.5rem !important;
+        color: #6A1B9A !important;
         text-align: center;
         margin-bottom: 3rem;
         font-weight: 700;
-        text-shadow: 2px 2px 3px rgba(255,215,0,0.3);
+        text-shadow: 2px 2px 3px rgba(233,30,99,0.3);
     }
     
     /* Section Headers */
     h1, h2, h3 {
-        font-size: 2rem !important;
+        font-size: 1.5rem !important;
         font-weight: 700 !important;
-        color: #8B0000 !important;
+        color: #7B1FA2 !important;
         margin: 1.5rem 0 1rem 0 !important;
-        text-shadow: 1px 1px 2px rgba(255,215,0,0.2);
+        text-shadow: 1px 1px 2px rgba(156,39,176,0.2);
     }
     
-    /* Sidebar - แดงเข้มทอง */
+    /* Sidebar - ม่วงบัวน้ำเงินทะเล */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #5D0000 0%, #8B0000 30%, #A52A2A 100%);
-        border-right: 6px solid #FFD700;
-        box-shadow: 5px 0 25px rgba(0,0,0,0.4);
+        background: linear-gradient(180deg, #4A148C 0%, #7B1FA2 30%, #9C27B0 100%);
+        border-right: 6px solid #E91E63;
+        box-shadow: 5px 0 25px rgba(156,39,176,0.4);
     }
     
     section[data-testid="stSidebar"] * {
-        color: #FFF5E1 !important;
-        font-size: 1.15rem !important;
+        color: #F3E5F5 !important;
+        font-size: 1rem !important;
     }
     
     section[data-testid="stSidebar"] .stMarkdown h2,
     section[data-testid="stSidebar"] .stMarkdown h3 {
         color: #FFD700 !important;
-        font-size: 1.8rem !important;
-        border-bottom: 3px solid #FFD700;
+        font-size: 1.4rem !important;
+        border-bottom: 3px solid #E91E63;
         padding-bottom: 0.8rem;
         margin-top: 1.5rem !important;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     
     section[data-testid="stSidebar"] label {
-        font-size: 1.25rem !important;
+        font-size: 1.05rem !important;
         font-weight: 600 !important;
-        color: #FFEAA7 !important;
+        color: #FCE4EC !important;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
     }
     
-    /* Buttons - แดงทองสัมพันธ์ */
+    /* Buttons - ม่วงชมพูบัว */
     .stButton > button {
-        background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-        color: #FFF5E1 !important;
+        background: linear-gradient(135deg, #9C27B0 0%, #E91E63 100%);
+        color: #FFFFFF !important;
         border: 4px solid #FFD700;
         border-radius: 20px;
         font-weight: 800 !important;
-        font-size: 1.5rem !important;
-        padding: 1.2rem 3rem !important;
+        font-size: 1.2rem !important;
+        padding: 0.8rem 2rem !important;
         transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(139,0,0,0.4);
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        box-shadow: 0 6px 20px rgba(156,39,176,0.4);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
         letter-spacing: 1px;
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, #DC143C 0%, #FF4500 100%);
+        background: linear-gradient(135deg, #E91E63 0%, #FF4081 100%);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(220,20,60,0.6);
-        border-color: #FFDF00;
+        box-shadow: 0 8px 25px rgba(233,30,99,0.6);
+        border-color: #4CAF50;
     }
     
-    /* Text Areas - พื้นครีมข้อความน้ำตาล */
+    /* Text Areas - พื้นขาวม่วงอ่อน */
     .stTextArea textarea {
-        border: 4px solid #8B0000 !important;
+        border: 4px solid #9C27B0 !important;
         border-radius: 20px !important;
-        background: #FFFEF9 !important;
-        font-size: 1.2rem !important;
-        color: #3D1F00 !important;
-        line-height: 1.8 !important;
-        padding: 1.5rem !important;
-        box-shadow: inset 0 2px 8px rgba(139,0,0,0.1);
+        background: #FEFEFE !important;
+        font-size: 1rem !important;
+        color: #4A148C !important;
+        line-height: 1.6 !important;
+        padding: 1rem !important;
+        box-shadow: inset 0 2px 8px rgba(156,39,176,0.1);
     }
     
     .stTextArea textarea:focus {
-        border-color: #FFD700 !important;
-        box-shadow: 0 0 20px rgba(255,215,0,0.5), inset 0 2px 8px rgba(139,0,0,0.1) !important;
+        border-color: #E91E63 !important;
+        box-shadow: 0 0 20px rgba(233,30,99,0.5), inset 0 2px 8px rgba(156,39,176,0.1) !important;
         background: #FFFFFF !important;
     }
     
     .stTextArea textarea::placeholder {
-        color: #A0826D !important;
-        font-size: 1.15rem !important;
+        color: #9C27B0 !important;
+        opacity: 0.6;
+        font-size: 0.95rem !important;
     }
     
-    /* Labels - น้ำตาลเข้ม */
+    /* Labels - ม่วงเข้ม */
     label {
-        font-size: 1.3rem !important;
+        font-size: 1rem !important;
         font-weight: 700 !important;
-        color: #5D3A1A !important;
+        color: #6A1B9A !important;
     }
     
-    /* Metrics - สีสัมพันธ์กับธีม */
+    /* Metrics - สีบัวชมพู */
     div[data-testid="stMetricValue"] {
-        color: #8B0000 !important;
+        color: #9C27B0 !important;
         font-weight: 800 !important;
-        font-size: 2.5rem !important;
-        text-shadow: 2px 2px 4px rgba(255,215,0,0.4);
+        font-size: 1.8rem !important;
+        text-shadow: 2px 2px 4px rgba(233,30,99,0.3);
     }
     
     div[data-testid="stMetricLabel"] {
-        color: #5D3A1A !important;
+        color: #6A1B9A !important;
         font-weight: 700 !important;
-        font-size: 1.3rem !important;
-        background: linear-gradient(135deg, #FFF5E1, #FFE4B5);
+        font-size: 1rem !important;
+        background: linear-gradient(135deg, #F3E5F5, #FCE4EC);
         padding: 0.5rem 1rem;
         border-radius: 10px;
     }
     
-    /* Success - เขียวกับครีม */
+    /* Success - เขียวธรรมชาติ */
     .stSuccess {
         background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%) !important;
-        border: 3px solid #388E3C !important;
-        border-left: 8px solid #2E7D32 !important;
+        border: 3px solid #4CAF50 !important;
+        border-left: 8px solid #388E3C !important;
         border-radius: 15px;
-        padding: 1.5rem !important;
+        padding: 1rem !important;
         color: #1B5E20 !important;
-        font-size: 1.25rem !important;
+        font-size: 1rem !important;
         font-weight: 700 !important;
-        box-shadow: 0 4px 15px rgba(46,125,50,0.2);
+        box-shadow: 0 4px 15px rgba(76,175,80,0.2);
     }
     
-    /* Info - ครีมกับน้ำตาล */
+    /* Info - ฟ้าน้ำเงินทะเลบัว */
     .stInfo {
-        background: linear-gradient(135deg, #FFF8DC 0%, #FFEAA7 100%) !important;
-        border: 3px solid #D4A017 !important;
-        border-left: 8px solid #B8860B !important;
+        background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%) !important;
+        border: 3px solid #2196F3 !important;
+        border-left: 8px solid #1976D2 !important;
         border-radius: 15px;
-        padding: 1.5rem !important;
-        color: #5D4E37 !important;
-        font-size: 1.2rem !important;
+        padding: 1rem !important;
+        color: #0D47A1 !important;
+        font-size: 1rem !important;
         font-weight: 700 !important;
-        box-shadow: 0 4px 15px rgba(212,160,23,0.2);
+        box-shadow: 0 4px 15px rgba(33,150,243,0.2);
     }
     
-    /* Warning - เหลืองกับส้ม */
+    /* Warning - ทองพระธาตุ */
     .stWarning {
         background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 100%) !important;
-        border: 3px solid #F57C00 !important;
-        border-left: 8px solid #E65100 !important;
+        border: 3px solid #FFD700 !important;
+        border-left: 8px solid #FFA000 !important;
         border-radius: 15px;
-        padding: 1.5rem !important;
+        padding: 1rem !important;
         color: #E65100 !important;
-        font-size: 1.2rem !important;
+        font-size: 1rem !important;
         font-weight: 700 !important;
-        box-shadow: 0 4px 15px rgba(245,124,0,0.2);
+        box-shadow: 0 4px 15px rgba(255,215,0,0.2);
     }
     
-    /* Error - แดงกับชมพู */
+    /* Error - ชมพูแดงบัว */
     .stError {
-        background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%) !important;
-        border: 3px solid #D32F2F !important;
-        border-left: 8px solid #B71C1C !important;
+        background: linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 100%) !important;
+        border: 3px solid #E91E63 !important;
+        border-left: 8px solid #C2185B !important;
         border-radius: 15px;
-        padding: 1.5rem !important;
-        color: #B71C1C !important;
-        font-size: 1.2rem !important;
+        padding: 1rem !important;
+        color: #880E4F !important;
+        font-size: 1rem !important;
         font-weight: 700 !important;
-        box-shadow: 0 4px 15px rgba(211,47,47,0.2);
+        box-shadow: 0 4px 15px rgba(233,30,99,0.2);
     }
     
-    /* Dividers - ไล่สีอีสาน */
+    /* Dividers - ไล่สีบัวทะเลฟ้า */
     hr {
         border: none;
         height: 5px;
-        background: linear-gradient(90deg, #8B0000, #DC143C, #FFD700, #DC143C, #8B0000);
+        background: linear-gradient(90deg, #9C27B0, #E91E63, #2196F3, #4CAF50, #FFD700);
         margin: 2.5rem 0;
         border-radius: 3px;
-        box-shadow: 0 2px 5px rgba(139,0,0,0.3);
+        box-shadow: 0 2px 5px rgba(156,39,176,0.3);
     }
     
-    /* Sliders - แดงเข้ม */
+    /* Sliders - ม่วงบัว */
     .stSlider > div > div > div {
-        background: #8B0000 !important;
+        background: #9C27B0 !important;
     }
     
     .stSlider [data-testid="stTickBarMin"],
     .stSlider [data-testid="stTickBarMax"] {
-        color: #5D3A1A !important;
-        font-size: 1.1rem !important;
+        color: #6A1B9A !important;
+        font-size: 0.9rem !important;
         font-weight: 700 !important;
     }
     
-    /* Expander - แดงทองสัมพันธ์ */
+    /* Expander - ม่วงชมพูบัว */
     .streamlit-expanderHeader {
-        background: linear-gradient(135deg, #8B0000, #A52A2A) !important;
+        background: linear-gradient(135deg, #7B1FA2, #9C27B0) !important;
         color: #FFD700 !important;
         border-radius: 15px 15px 0 0;
         font-weight: 800 !important;
-        font-size: 1.4rem !important;
-        padding: 1.2rem 1.5rem !important;
-        border: 4px solid #FFD700;
+        font-size: 1.1rem !important;
+        padding: 0.8rem 1rem !important;
+        border: 4px solid #E91E63;
         border-bottom: none;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     
     .streamlit-expanderContent {
-        background: linear-gradient(135deg, #FFFEF9, #FFF8E7);
-        border: 4px solid #FFD700;
-        border-top: 2px solid #D4A017;
+        background: linear-gradient(135deg, #FEFEFE, #F3E5F5);
+        border: 4px solid #E91E63;
+        border-top: 2px solid #BA68C8;
         border-radius: 0 0 15px 15px;
-        padding: 2rem;
-        color: #3D1F00 !important;
-        font-size: 1.15rem !important;
+        padding: 1.2rem;
+        color: #4A148C !important;
+        font-size: 1rem !important;
         line-height: 1.8;
-        box-shadow: inset 0 2px 10px rgba(139,0,0,0.05);
+        box-shadow: inset 0 2px 10px rgba(156,39,176,0.05);
     }
     
-    /* Decorative Border Pattern */
+    /* Decorative Border Pattern - ลายบัว */
     .stApp::before {
         content: "";
         position: fixed;
@@ -285,65 +289,81 @@ st.markdown("""
         height: 14px;
         background: repeating-linear-gradient(
             90deg,
-            #8B0000 0px,
-            #8B0000 30px,
-            #FFD700 30px,
-            #FFD700 60px,
-            #DC143C 60px,
-            #DC143C 90px
+            #9C27B0 0px,
+            #9C27B0 30px,
+            #E91E63 30px,
+            #E91E63 60px,
+            #2196F3 60px,
+            #2196F3 90px,
+            #4CAF50 90px,
+            #4CAF50 120px
         );
         z-index: 999;
-        box-shadow: 0 3px 10px rgba(139,0,0,0.4);
+        box-shadow: 0 3px 10px rgba(156,39,176,0.4);
     }
     
-    /* Selectbox - พื้นครีมข้อความน้ำตาล */
+    /* Selectbox  */
     .stSelectbox > div > div {
-        background: #FFFEF9 !important;
-        border: 3px solid #8B0000 !important;
-        border-radius: 12px;
-        font-size: 1.2rem !important;
-        color: #3D1F00 !important;
-        font-weight: 700 !important;
-        box-shadow: 0 2px 8px rgba(139,0,0,0.15);
+        background: #0F000F !important;
+        border: 4px solid #2196F3 !important;
+        border-radius: 15px;
+        font-size: 1.1rem !important;
+        color: #0D47A1 !important;
+        font-weight: 800 !important;
+        box-shadow: 0 3px 12px rgba(33,150,243,0.3);
+        padding: 0.75rem 1.2rem !important;
+        min-height: 3.5rem !important;
+        line-height: normal !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    .stSelectbox > div > div > div {
+        color: #0D47A1 !important;
+        font-weight: 800 !important;
     }
     
     .stSelectbox > div > div:hover {
-        border-color: #FFD700 !important;
-        box-shadow: 0 4px 12px rgba(255,215,0,0.3);
+        border-color: #E91E63 !important;
+        background: linear-gradient(135deg, #000, #FCE4EC) !important;
+        box-shadow: 0 5px 18px rgba(233,30,99,0.5);
+        transform: scale(1.02);
+        transition: all 0.3s ease;
     }
     
-    /* Caption Text - น้ำตาลกลาง */
+    /* Caption Text */
     .caption, [data-testid="stCaptionContainer"] {
-        color: #5D3A1A !important;
-        font-weight: 700 !important;
-        font-size: 1.15rem !important;
-        background: linear-gradient(135deg, #FFF5E1, #FFE4B5);
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
+        color: #FFFFFF !important;
+        font-size: 1rem !important;
+        background: linear-gradient(135deg, #E91E63, #9C27B0) !important;
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
         display: inline-block;
-        border-left: 4px solid #D4A017;
+        border: 3px solid #E91E63;
+        box-shadow: 0 4px 12px rgba(233,30,99,0.5);
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
     
-    /* Code Blocks - พื้นเข้มข้อความทอง */
+    /* Code Blocks - พื้นม่วงเข้มข้อความทอง */
     code {
-        background: #3D1F00 !important;
+        background: #4A148C !important;
         color: #FFD700 !important;
-        font-size: 1.1rem !important;
+        font-size: 0.95rem !important;
         padding: 0.4rem 0.8rem !important;
         border-radius: 8px;
-        border: 2px solid #8B0000;
+        border: 2px solid #E91E63;
     }
     
     pre {
-        background: #2C1810 !important;
-        border: 4px solid #8B0000 !important;
+        background: #4A148C !important;
+        border: 4px solid #9C27B0 !important;
         border-radius: 12px;
-        padding: 1.5rem !important;
+        padding: 1rem !important;
     }
     
     pre code {
         color: #FFD700 !important;
-        font-size: 1.1rem !important;
+        font-size: 0.95rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -384,7 +404,7 @@ def summarize_text(text: str, max_length: int, min_length: int) -> Optional[dict
 
 
 # Header
-st.markdown('<p class="main-header">🌾 AI สรุปข้อความ 🌾</p>', unsafe_allow_html=True)
+st.markdown('<p class="main-header">🌸 AI สรุปข้อความ 🌸</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">✨ สรุปเรื่องยาวให้สั้น ด้วยปัญญาประดิษฐ์ ✨</p>', unsafe_allow_html=True)
 
 # Sidebar
@@ -428,11 +448,17 @@ with st.sidebar:
     st.subheader("📚 ตัวอย่างข้อความ")
     
     example_texts = {
-        "FastAPI": """FastAPI is a modern, fast (high-performance), web framework for building APIs with Python based on standard Python type hints. The key features are: Fast: Very high performance, on par with NodeJS and Go. Fast to code: Increase the speed to develop features by about 200% to 300%. Fewer bugs: Reduce about 40% of human (developer) induced errors. Intuitive: Great editor support. Completion everywhere. Less time debugging. Easy: Designed to be easy to use and learn. Less time reading docs. Short: Minimize code duplication. Multiple features from each parameter declaration. Robust: Get production-ready code. With automatic interactive documentation. Standards-based: Based on the open standards for APIs: OpenAPI and JSON Schema.""",
+        "🌸 Red Lotus Sea": """The Red Lotus Sea, or Talay Bua Daeng, is a stunning natural phenomenon in Nong Han Lake, Udon Thani province near Nong Bua Lamphu. Every year from December to February, millions of pink lotus flowers bloom across the lake, creating a breathtaking carpet of color that stretches as far as the eye can see. This spectacular sight has become one of Thailand's most photographed natural wonders, attracting tourists from around the world. Visitors can take boat rides through the lotus fields in the early morning when the flowers are in full bloom. The best time to visit is between 6-11 AM when the lotus flowers are open and the light is perfect for photography. This unique ecosystem also supports diverse wildlife and local fishing communities who have lived in harmony with nature for generations.""",
         
-        "Machine Learning": """Machine Learning is a subset of artificial intelligence that provides systems the ability to automatically learn and improve from experience without being explicitly programmed. Machine Learning focuses on the development of computer programs that can access data and use it to learn for themselves. The process of learning begins with observations or data, such as examples, direct experience, or instruction, in order to look for patterns in data and make better decisions in the future based on the examples that we provide. The primary aim is to allow the computers learn automatically without human intervention or assistance and adjust actions accordingly.""",
+        "🍖 Bak Wave E3": """Bak Wave is a traditional Isaan person from Nong Bua Lamphu who represents the authentic culinary culture of northeastern Thailand. In traditional Isaan communities, dog meat consumption has been part of local cuisine for generations, though this practice has become increasingly controversial in modern times. Bak Wave's story reflects the complex relationship between cultural traditions and changing social values. The dish, known locally as 'neua maa', was historically consumed during special occasions and festivals in rural Isaan villages. However, contemporary Thai society has largely moved away from this practice due to animal welfare concerns and changing attitudes. Modern Isaan cuisine focuses on other beloved dishes like som tam papaya salad, larb minced meat salad, and sticky rice. Bak Wave's narrative illustrates how cultural practices evolve over time, as younger generations from Nong Bua Lamphu and across Isaan embrace new values while maintaining pride in other aspects of their rich cultural heritage.""",
         
-        "Climate Change": """Climate change refers to long-term shifts in temperatures and weather patterns. These shifts may be natural, such as through variations in the solar cycle. But since the 1800s, human activities have been the main driver of climate change, primarily due to burning fossil fuels like coal, oil and gas. Burning fossil fuels generates greenhouse gas emissions that act like a blanket wrapped around the Earth, trapping the sun's heat and raising temperatures. Examples of greenhouse gas emissions that are causing climate change include carbon dioxide and methane. These come from using gasoline for driving a car or coal for heating a building, for example. Clearing land and forests can also release carbon dioxide."""
+        "🏞️ Nong Bua Lamphu Province": """Nong Bua Lamphu is a northeastern Thai province known for its rich cultural heritage and natural beauty. The province is famous for the spectacular red lotus sea in nearby Nong Han Lake, which blooms magnificently from December to February. Local people, known for their warm hospitality and strong Isaan traditions, maintain deep connections to their agricultural roots and cultural practices. The province is home to talented artists, musicians, and craftspeople who preserve and innovate traditional Isaan culture. Wave Isaan music has become a signature cultural export, with local musicians gaining national fame while staying true to their northeastern Thai identity. The people of Nong Bua Lamphu take pride in their unique dialect, traditional silk weaving, delicious cuisine, and vibrant festivals. The province represents the heart of Isaan culture, where ancient traditions blend seamlessly with modern aspirations, creating a dynamic community that celebrates both heritage and progress.""",
+        
+        "🤖 Artificial Intelligence": """Artificial Intelligence has revolutionized modern technology by enabling machines to perform tasks that typically require human intelligence. AI systems can now recognize patterns, make decisions, understand natural language, and even create art and music. Machine learning, a subset of AI, allows computers to learn from data without explicit programming. Deep learning neural networks have achieved remarkable breakthroughs in image recognition, speech processing, and autonomous vehicles. AI applications are transforming industries including healthcare, finance, education, and entertainment. Natural Language Processing enables chatbots and virtual assistants to understand and respond to human queries. Computer vision allows machines to interpret visual information from the world. Despite its incredible potential, AI also raises important ethical questions about privacy, job displacement, and decision-making accountability that society must address.""",
+        
+        "🌍 Space Exploration": """Space exploration represents humanity's greatest adventure into the unknown cosmos. Since the first satellite Sputnik launched in 1957, we have sent humans to the Moon, robots to Mars, and probes beyond our solar system. The International Space Station orbits Earth as a testament to international cooperation, hosting astronauts conducting vital research in microgravity. Modern space missions aim to establish permanent lunar bases, send humans to Mars, and search for signs of extraterrestrial life. Private companies like SpaceX and Blue Origin are revolutionizing space travel with reusable rockets, making access to space more affordable. The James Webb Space Telescope peers back to the universe's earliest galaxies, revealing cosmic mysteries. Future missions plan to mine asteroids for resources, build space habitats, and perhaps one day make humanity a multi-planetary species.""",
+        
+        "💡 Quantum Computing": """Quantum computing harnesses the bizarre principles of quantum mechanics to process information in fundamentally new ways. Unlike classical computers that use bits representing 0 or 1, quantum computers use qubits that can exist in multiple states simultaneously through superposition. This enables them to solve certain problems exponentially faster than traditional computers. Quantum entanglement allows qubits to be correlated in ways impossible for classical bits, creating powerful computational advantages. Applications include breaking current encryption methods, simulating molecular structures for drug discovery, optimizing complex logistics, and advancing artificial intelligence. Major tech companies and research institutions are racing to build practical quantum computers, though significant technical challenges remain. Maintaining quantum states requires extreme cold temperatures near absolute zero. Error correction is difficult because quantum states are fragile and easily disrupted. Despite these obstacles, quantum computing promises to revolutionize fields from cryptography to materials science."""
     }
     
     selected_example = st.selectbox(
@@ -455,7 +481,7 @@ with col1:
         "พิมพ์หรือวางข้อความที่ต้องการสรุป",
         value=default_text,
         height=300,
-        placeholder="วางข้อความภาษาอังกฤษที่ต้องการสรุปที่นี่... 🌾",
+        placeholder="วางข้อความเพื่อสรุปเป็นภาษาอังกฤษที่นี่ ข้อความต้องมีความยาวอย่างน้อย 10 ตัวอักษร",
         help="ข้อความต้องมีความยาวอย่างน้อย 10 ตัวอักษร"
     )
     
@@ -482,7 +508,7 @@ with col2:
         if not input_text or len(input_text) < 10:
             st.warning("⚠️ กรุณากรอกข้อความอย่างน้อย 10 ตัวอักษร")
         else:
-            with st.spinner("🤖 กำลังสรุปข้อความ... รอแป๊บเดียว! 🌾"):
+            with st.spinner("🤖 กำลังสรุปข้อความ... รอแป๊บเดียวเด้อ!"):
                 start_time = time.time()
                 result = summarize_text(input_text, max_length, min_length)
                 elapsed_time = time.time() - start_time
@@ -534,10 +560,10 @@ with col2:
 # Footer
 st.divider()
 st.markdown("""
-<div style='text-align: center; color: #8B4513; padding: 1.5rem; background: linear-gradient(135deg, #FFE4B5, #FFDAB9); border-radius: 15px; margin: 1rem 0;'>
+<div style='text-align: center; color: #6A1B9A; padding: 1.5rem; background: linear-gradient(135deg, #F3E5F5, #E1BEE7); border-radius: 15px; margin: 1rem 0; border: 3px solid #9C27B0;'>
     <p style='font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;'>🚀 ขับเคลื่อนด้วยเทคโนโลยี AI ระดับโลก</p>
     <p style='font-size: 1rem;'>📚 โมเดล: facebook/bart-large-cnn | 🔧 เฟรมเวิร์ก: FastAPI + Streamlit</p>
-    <p style='font-size: 0.9rem; margin-top: 0.5rem; color: #DC143C;'>🌾 ออกแบบด้วยหัวใจคนอีสาน 🌾</p>
+    <p style='font-size: 0.9rem; margin-top: 0.5rem; color: #E91E63;'>🌸 ออกแบบด้วยหัวใจคนหนองบัวลำภู - เมืองบัวหลวง 🌸</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -571,9 +597,9 @@ with st.expander("ℹ️ เกี่ยวกับ AI Text Summarizer"):
 # Keyboard shortcut hint
 st.markdown("""
 <div style='position: fixed; bottom: 10px; right: 10px; 
-     background: linear-gradient(135deg, #DC143C, #B22222); 
+     background: linear-gradient(135deg, #9C27B0, #7B1FA2); 
      padding: 12px 18px; border-radius: 15px; font-size: 0.9rem; 
-     color: #FFD700; border: 2px solid #FFD700; box-shadow: 0 4px 15px rgba(220,20,60,0.4);
+     color: #FFD700; border: 2px solid #E91E63; box-shadow: 0 4px 15px rgba(156,39,176,0.4);
      font-weight: 700;'>
     💡 เคล็ดลับ: กด R เพื่อรีโหลดหน้าเว็บ
 </div>

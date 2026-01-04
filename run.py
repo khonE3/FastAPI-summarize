@@ -26,18 +26,18 @@ def run_frontend():
     env = os.environ.copy()
     env["STREAMLIT_BROWSER_GATHER_USAGE_STATS"] = "false"
     
+    # Use CREATE_NEW_PROCESS_GROUP on Windows to prevent shutdown propagation
+    creationflags = subprocess.CREATE_NEW_PROCESS_GROUP if sys.platform == 'win32' else 0
+    
     return subprocess.Popen(
         [
             sys.executable, "-m", "streamlit", "run", "frontend.py",
-            "--server.port", "8501",
-            "--server.runOnSave", "true",
-            "--server.fileWatcherType", "auto",
-            "--browser.gatherUsageStats", "false",
-            "--client.showErrorDetails", "true",
-            "--runner.fastReruns", "true"
+            "--server.headless", "true"
         ],
         cwd=Path(__file__).parent,
-        env=env
+        env=env,
+        creationflags=creationflags,
+        shell=False
     )
 
 def main():

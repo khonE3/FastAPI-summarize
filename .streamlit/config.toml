@@ -8,6 +8,12 @@ runOnSave = true
 # File watcher type (auto, poll, or none)
 fileWatcherType = "auto"
 
+# Always rerun instead of restart (prevents connection loss)
+alwaysRerun = true
+
+# Run in headless mode (no browser control)
+headless = true
+
 # Port configuration
 port = 8501
 
@@ -27,6 +33,9 @@ serverAddress = "localhost"
 [runner]
 # Enable fast reruns
 fastReruns = true
+
+# Allow run on save (hot reload)
+allowRunOnSave = true
 
 # Magic commands
 magicEnabled = true
