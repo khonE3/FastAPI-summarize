@@ -17,8 +17,9 @@ def run_backend():
     )
 
 def run_frontend():
-    """Run Streamlit frontend without email prompt"""
+    """Run Streamlit frontend with auto-reload enabled"""
     print("🎨 Starting Streamlit frontend...")
+    print("   📝 Auto-reload enabled - แก้โค้ดแล้วจะอัพเดทอัตโนมัติ!")
     time.sleep(3)  # Wait for backend to start
     
     # Set environment variable to skip email prompt
@@ -29,8 +30,11 @@ def run_frontend():
         [
             sys.executable, "-m", "streamlit", "run", "frontend.py",
             "--server.port", "8501",
+            "--server.runOnSave", "true",
+            "--server.fileWatcherType", "auto",
             "--browser.gatherUsageStats", "false",
-            "--client.showErrorDetails", "true"
+            "--client.showErrorDetails", "true",
+            "--runner.fastReruns", "true"
         ],
         cwd=Path(__file__).parent,
         env=env
@@ -63,7 +67,11 @@ def main():
         print("   • API Docs:     http://localhost:8000/docs")
         print("   • API ReDoc:    http://localhost:8000/redoc")
         print()
-        print("💡 Tip: Frontend จะเปิดใน 5-10 วินาที")
+        print("💡 Tips:")
+        print("   • Frontend จะเปิดใน 5-10 วินาที")
+        print("   • ✨ Auto-reload enabled - แก้โค้ดจะอัพเดทอัตโนมัติ!")
+        print("   • แก้ไข frontend.py หรือ app/* แล้วเห็นผลทันที")
+        print()
         print("⏹️  Press Ctrl+C to stop all services")
         print("=" * 60)
         print()
