@@ -64,52 +64,78 @@ Service class ใช้ Singleton Pattern เพื่อ:
 
 ```
 FastAPI-summarize/
-├── app/                           # Backend Application
-│   ├── __init__.py
-│   ├── api/
+├── 📂 app/                        # Backend Application
+│   ├── __init__.py                # Package initializer
+│   │
+│   ├── 📂 api/                    # API Layer
 │   │   ├── __init__.py
-│   │   └── v1/
+│   │   └── 📂 v1/                 # API Version 1
 │   │       ├── __init__.py
-│   │       ├── router.py          # รวม routes ทั้งหมด
-│   │       └── endpoints/
+│   │       ├── router.py          # Main router (รวม endpoints)
+│   │       └── 📂 endpoints/      # API Endpoints
 │   │           ├── __init__.py
-│   │           ├── health.py      # Health check endpoints
+│   │           ├── health.py      # Health check & status
 │   │           └── summarize.py   # Summarization endpoints
-│   ├── core/
+│   │
+│   ├── 📂 core/                   # Core Configuration
 │   │   ├── __init__.py
-│   │   └── config.py              # Application configuration
-│   ├── models/
+│   │   └── config.py              # App settings & env variables
+│   │
+│   ├── 📂 models/                 # Data Models
 │   │   ├── __init__.py
-│   │   └── schemas.py             # Pydantic schemas
-│   └── services/
+│   │   └── schemas.py             # Pydantic request/response schemas
+│   │
+│   └── 📂 services/               # Business Logic
 │       ├── __init__.py
-│       └── summarizer.py          # Summarization service
-├── main.py                        # Backend entry point
-├── frontend.py                    # Streamlit Frontend UI ⭐
-├── run.py                         # Unified runner (Backend + Frontend)
-├── start.bat                      # Windows: Start all
-├── start_backend.bat              # Windows: Start backend only
-├── start_frontend.bat             # Windows: Start frontend only
-├── pyproject.toml                 # Project dependencies (UV)
-├── uv.lock                        # Lock file
-├── .env.example                   # Environment variables example
-├── .gitignore
-└── README.md
+│       └── summarizer.py          # AI summarization service (Singleton)
+│
+├── 📄 main.py                     # FastAPI application entry point
+├── 🎨 frontend.py                 # Streamlit UI (Web Interface) ⭐
+├── 🚀 run.py                      # Unified runner (Backend + Frontend)
+│
+├── 📦 pyproject.toml              # UV project config & dependencies
+├── 🔒 uv.lock                     # Locked dependency versions
+│
+├── 📝 .env.example                # Environment variables template
+├── 🚫 .gitignore                  # Git ignore rules
+├── 🐍 .python-version             # Python version specification
+│
+└── 📖 README.md                   # Project documentation (this file)
 ```
 
+### 📋 คำอธิบายไฟล์สำคัญ:
+
+| ไฟล์ | หน้าที่ |
+|------|--------|
+| **main.py** | Entry point ของ FastAPI, กำหนด CORS, middleware, routing |
+| **frontend.py** | Streamlit Web UI พร้อม custom CSS และ examples |
+| **run.py** | สคริปต์รันทั้ง backend + frontend พร้อมกัน |
+| **app/api/v1/router.py** | รวม API routes ทั้งหมด |
+| **app/services/summarizer.py** | Singleton service โหลด BART model |
+| **app/models/schemas.py** | Pydantic models สำหรับ validation |
+| **app/core/config.py** | Settings และ environment configuration |
+| **pyproject.toml** | UV dependencies และ project metadata |
+
 ---
-(Backend) |
-| **Streamlit** | Frontend UI Framework ⭐ 
+
 ## 🛠 เทคโนโลยีที่ใช้
 
-| เทคโนโลยี | หน้าที่ |
-|-----------|--------|
-| **FastAPI** | Web Framework |
-| **Uvicorn** | ASGI Server |
-| **Pydantic** | Data Validation & Settings |
-| **Transformers** | ML/NLP Library (Hugging Face) |
-| **PyTorch** | Deep Learning Backend |
-| **UV** | Package Manager (เร็วกว่า pip 10-100x) |
+| เทคโนโลยี | เวอร์ชัน | หน้าที่ |
+|-----------|---------|--------|
+| **FastAPI** | 0.128.0 | Modern Web Framework สำหรับสร้าง API |
+| **Streamlit** | 1.52.2 | Frontend UI Framework (Web Interface) ⭐ |
+| **Uvicorn** | 0.40.0 | ASGI Web Server (Production-ready) |
+| **Pydantic** | 2.12.5 | Data Validation & Settings Management |
+| **Transformers** | 4.57.3 | Hugging Face ML/NLP Library |
+| **PyTorch** | 2.9.1 | Deep Learning Framework (Model Backend) |
+| **UV** | Latest | Ultra-fast Python Package Manager (10-100x เร็วกว่า pip) |
+
+### 📚 Dependencies เพิ่มเติม:
+- **pydantic-settings** - Environment & Configuration management
+- **python-multipart** - Form data & file uploads support
+- **requests** - HTTP client สำหรับเชื่อมต่อ API
+- **pandas** - Data manipulation (Streamlit dependency)
+- **altair** - Data visualization (Streamlit charts)
 
 ---
 
@@ -179,7 +205,7 @@ uv run streamlit run frontend.py
 
 ### 🎨 1. ใช้งานผ่าน Streamlit Frontend (แนะนำ)
 
-1. รัน application: `start.bat` หรือ `uv run python run.py`
+1. รัน application: `uv run python run.py`
 2. เปิดเบราว์เซอร์ที่ http://localhost:8501
 3. วางข้อความที่ต้องการสรุป
 4. ปรับความยาวตามต้องการ
@@ -304,7 +330,8 @@ Client Request
 ```
 
 ---
-🎨 Screenshots
+
+## 🎨 Screenshots
 
 ### Streamlit Frontend UI
 ```
@@ -392,6 +419,5 @@ MIT License
 ---
 
 ## 👨‍💻 Author
-
-Created with ❤️ using FastAPI, Streamlit,
+, Streamlit,
 Created with ❤️ using FastAPI and UV
