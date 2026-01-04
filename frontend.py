@@ -88,6 +88,13 @@ st.markdown("""
         box-shadow: 5px 0 25px rgba(156,39,176,0.4);
     }
     
+    /* Header ⚙️ การตั้งค่า ใน sidebar */
+    section[data-testid="stSidebar"] h1 {
+        margin-top: 0 !important;
+        margin-bottom: 0.1rem !important;
+        padding-top: 0.1rem !important;
+    }
+    
     section[data-testid="stSidebar"] * {
         color: #F3E5F5 !important;
         font-size: 1rem !important;
@@ -98,8 +105,9 @@ st.markdown("""
         color: #FFD700 !important;
         font-size: 1.4rem !important;
         border-bottom: 3px solid #E91E63;
-        padding-bottom: 0.8rem;
-        margin-top: 1.5rem !important;
+        padding-bottom: 0.2rem;
+        margin-top: 0.2rem !important;
+        margin-bottom: 0.2rem !important;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     
@@ -142,12 +150,15 @@ st.markdown("""
         line-height: 1.6 !important;
         padding: 1rem !important;
         box-shadow: inset 0 2px 8px rgba(156,39,176,0.1);
+        cursor: text !important;
     }
     
     .stTextArea textarea:focus {
         border-color: #E91E63 !important;
         box-shadow: 0 0 20px rgba(233,30,99,0.5), inset 0 2px 8px rgba(156,39,176,0.1) !important;
         background: #FFFFFF !important;
+        cursor: text !important;
+        caret-color: #9C27B0 !important;
     }
     
     .stTextArea textarea::placeholder {
@@ -242,6 +253,12 @@ st.markdown("""
         box-shadow: 0 2px 5px rgba(156,39,176,0.3);
     }
     
+    /* Divider ใน Sidebar - ลดระยะห่าง */
+    section[data-testid="stSidebar"] hr {
+        margin: 0.8rem 0 !important;
+        height: 3px !important;
+    }
+    
     /* Sliders - ม่วงบัว */
     .stSlider > div > div > div {
         background: #9C27B0 !important;
@@ -252,6 +269,32 @@ st.markdown("""
         color: #6A1B9A !important;
         font-size: 0.9rem !important;
         font-weight: 700 !important;
+    }
+    
+    /* ลดระยะห่างระหว่าง elements ใน sidebar */
+    section[data-testid="stSidebar"] .stSelectbox,
+    section[data-testid="stSidebar"] .stSlider {
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    section[data-testid="stSidebar"] .stMarkdown {
+        margin-bottom: 0.1rem !important;
+        margin-top: 0 !important;
+    }
+    
+    /* ลดระยะห่างของ label */
+    section[data-testid="stSidebar"] label {
+        margin-bottom: 0.2rem !important;
+    }
+    
+    /* ลดระยะห่างของ Success/Error boxes */
+    section[data-testid="stSidebar"] .stSuccess,
+    section[data-testid="stSidebar"] .stError,
+    section[data-testid="stSidebar"] .stInfo {
+        margin-bottom: 0.1rem !important;
+        margin-top: 0 !important;
+        padding: 0.1rem !important;
     }
     
     /* Expander - ม่วงชมพูบัว */
@@ -316,6 +359,8 @@ st.markdown("""
         line-height: normal !important;
         display: flex !important;
         align-items: center !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease;
     }
     
     .stSelectbox > div > div > div {
@@ -328,7 +373,7 @@ st.markdown("""
         background: linear-gradient(135deg, #000, #FCE4EC) !important;
         box-shadow: 0 5px 18px rgba(233,30,99,0.5);
         transform: scale(1.02);
-        transition: all 0.3s ease;
+        cursor: pointer !important;
     }
     
     /* Caption Text */
@@ -378,7 +423,7 @@ def check_api_health() -> bool:
         return False
 
 
-def summarize_text(text: str, max_length: int, min_length: int) -> Optional[dict]:
+def summarize_text(text: str, max_length: int, min_length: int, language: str = None) -> Optional[dict]:
     """Call summarization API"""
     try:
         response = requests.post(
@@ -386,7 +431,8 @@ def summarize_text(text: str, max_length: int, min_length: int) -> Optional[dict
             json={
                 "text": text,
                 "max_length": max_length,
-                "min_length": min_length
+                "min_length": min_length,
+                "language": language
             },
             timeout=30
         )
@@ -419,10 +465,23 @@ with st.sidebar:
         st.error("❌ ระบบยังไม่พร้อม")
         st.info("💡 เปิดเซิร์ฟเวอร์:\n```bash\nuv run uvicorn main:app --reload\n```")
     
-    st.divider()
-    
     # Settings
     st.subheader("📊 ตั้งค่าการสรุป")
+    
+    # Language selection
+    language_option = st.selectbox(
+        "🌐 ภาษา",
+        ["ตรวจจับอัตโนมัติ", "en ภาษาอังกฤษ", "🇹🇭 ภาษาไทย"],
+        help="เลือกภาษาหรือให้ระบบตรวจจับอัตโนมัติ"
+    )
+    
+    # Map selection to API parameter
+    language_map = {
+        "ตรวจจับอัตโนมัติ": None,
+        "en ภาษาอังกฤษ": "en",
+        "🇹🇭 ภาษาไทย": "th"
+    }
+    selected_language = language_map[language_option]
     
     max_length = st.slider(
         "ความยาวสูงสุด (คำ)",
@@ -442,15 +501,13 @@ with st.sidebar:
         help="ข้อความสรุปจะยาวไม่ต่ำกว่าจำนวนนี้"
     )
     
-    st.divider()
-    
     # Examples
     st.subheader("📚 ตัวอย่างข้อความ")
     
     example_texts = {
-        "🌸 Red Lotus Sea": """The Red Lotus Sea, or Talay Bua Daeng, is a stunning natural phenomenon in Nong Han Lake, Udon Thani province near Nong Bua Lamphu. Every year from December to February, millions of pink lotus flowers bloom across the lake, creating a breathtaking carpet of color that stretches as far as the eye can see. This spectacular sight has become one of Thailand's most photographed natural wonders, attracting tourists from around the world. Visitors can take boat rides through the lotus fields in the early morning when the flowers are in full bloom. The best time to visit is between 6-11 AM when the lotus flowers are open and the light is perfect for photography. This unique ecosystem also supports diverse wildlife and local fishing communities who have lived in harmony with nature for generations.""",
+        "🌸 ทะเลบัวแดง": """ทะเลบัวแดงหรือทะเลบัวแดงหนองหาร จังหวัดอุดรธานีใกล้กับหนองบัวลำภู เป็นปรากฏการณ์ทางธรรมชาติที่น่าทึ่ง ในช่วงเดือนธันวาคมถึงกุมภาพันธ์ของทุกปี ดอกบัวสีชมพูนับล้านดอกจะบานสะพรั่งทั่วทั้งทะเลสาบ สร้างเป็นพรมสีสันที่สวยงามจนตาไม่กะพริบ ทิวทัศน์อันงดงามนี้ได้กลายเป็นหนึ่งในสิ่งมหัศจรรย์ทางธรรมชาติที่มีคนถ่ายภาพมากที่สุดในประเทศไทย ดึงดูดนักท่องเที่ยวจากทั่วโลก ผู้มาเยือนสามารถนั่งเรือชมทุ่งดอกบัวในตอนเช้าตรู่เมื่อดอกบัวบานสะพรั่ง ช่วงเวลาที่ดีที่สุดคือระหว่าง 6-11 โมงเช้า เมื่อดอกบัวเบ่งบาน และแสงสว่างเหมาะสำหรับการถ่ายภาพ ระบบนิเวศที่มีเอกลักษณ์นี้ยังให้ที่อยู่อาศัยแก่สัตว์ป่าหลากหลายชนิดและชุมชนชาวประมงท้องถิ่นที่อาศัยอยู่อย่างกลมกลืนกับธรรมชาติมาหลายชั่วอายุคน""",
         
-        "🍖 Bak Wave E3": """Bak Wave is a traditional Isaan person from Nong Bua Lamphu who represents the authentic culinary culture of northeastern Thailand. In traditional Isaan communities, dog meat consumption has been part of local cuisine for generations, though this practice has become increasingly controversial in modern times. Bak Wave's story reflects the complex relationship between cultural traditions and changing social values. The dish, known locally as 'neua maa', was historically consumed during special occasions and festivals in rural Isaan villages. However, contemporary Thai society has largely moved away from this practice due to animal welfare concerns and changing attitudes. Modern Isaan cuisine focuses on other beloved dishes like som tam papaya salad, larb minced meat salad, and sticky rice. Bak Wave's narrative illustrates how cultural practices evolve over time, as younger generations from Nong Bua Lamphu and across Isaan embrace new values while maintaining pride in other aspects of their rich cultural heritage.""",
+        "🍖 บักเวฟอีสาน": """บักเวฟเป็นคนอีสานดั้งเดิมจากจังหวัดหนองบัวลำภู ซึ่งเป็นตัวแทนของวัฒนธรรมอาหารดั้งเดิมของภาคตะวันออกเฉียงเหนือของไทย ในชุมชนอีสานดั้งเดิม การบริโภคเนื้อสุนัขเป็นส่วนหนึ่งของอาหารพื้นบ้านมาหลายชั่วอายุคน แม้ว่าการปฏิบัตินี้จะกลายเป็นเรื่องที่ถกเถียงกันมากขึ้นในยุคปัจจุบัน เรื่องราวของบักเวฟสะท้อนถึงความสัมพันธ์ที่ซับซ้อนระหว่างประเพณีทางวัฒนธรรมกับค่านิยมทางสังคมที่เปลี่ยนแปลงไป อาหารที่รู้จักในท้องถิ่นว่า 'เนื้อหมา' เคยถูกบริโภคในโอกาสพิเศษและงานเทศกาลในหมู่บ้านอีสาน อย่างไรก็ตาม สังคมไทยร่วมสมัยได้หันห่างจากการปฏิบัตินี้เป็นส่วนใหญ่ เนื่องจากความกังวลเรื่องสวัสดิภาพสัตว์และทัศนคติที่เปลี่ยนแปลง อาหารอีสานสมัยใหม่มุ่งเน้นไปที่อาหารอื่นๆ ที่เป็นที่รักยิ่ง เช่น ส้มตำ ลาบ และข้าวเหนียว เรื่องเล่าของบักเวฟแสดงให้เห็นว่าการปฏิบัติทางวัฒนธรรมพัฒนาไปอย่างไรตามกาลเวลา เมื่อคนรุ่นใหม่จากหนองบัวลำภูและทั่วอีสานยอมรับค่านิยมใหม่ในขณะที่ยังคงภาคภูมิใจในมรดกทางวัฒนธรรมอันยิ่งใหญ่ของตน""",
         
         "🏞️ Nong Bua Lamphu Province": """Nong Bua Lamphu is a northeastern Thai province known for its rich cultural heritage and natural beauty. The province is famous for the spectacular red lotus sea in nearby Nong Han Lake, which blooms magnificently from December to February. Local people, known for their warm hospitality and strong Isaan traditions, maintain deep connections to their agricultural roots and cultural practices. The province is home to talented artists, musicians, and craftspeople who preserve and innovate traditional Isaan culture. Wave Isaan music has become a signature cultural export, with local musicians gaining national fame while staying true to their northeastern Thai identity. The people of Nong Bua Lamphu take pride in their unique dialect, traditional silk weaving, delicious cuisine, and vibrant festivals. The province represents the heart of Isaan culture, where ancient traditions blend seamlessly with modern aspirations, creating a dynamic community that celebrates both heritage and progress.""",
         
@@ -481,7 +538,7 @@ with col1:
         "พิมพ์หรือวางข้อความที่ต้องการสรุป",
         value=default_text,
         height=300,
-        placeholder="วางข้อความเพื่อสรุปเป็นภาษาอังกฤษที่นี่ ข้อความต้องมีความยาวอย่างน้อย 10 ตัวอักษร",
+        placeholder="วางข้อความภาษาไทยหรืออังกฤษที่นี่ ข้อความต้องมีความยาวอย่างน้อย 10 ตัวอักษร",
         help="ข้อความต้องมีความยาวอย่างน้อย 10 ตัวอักษร"
     )
     
@@ -510,15 +567,17 @@ with col2:
         else:
             with st.spinner("🤖 กำลังสรุปข้อความ... รอแป๊บเดียวเด้อ!"):
                 start_time = time.time()
-                result = summarize_text(input_text, max_length, min_length)
+                result = summarize_text(input_text, max_length, min_length, selected_language)
                 elapsed_time = time.time() - start_time
                 
                 if result:
                     # Display summary
                     with summary_placeholder.container():
                         st.success("✅ สรุปเสร็จแล้ว!")
-                        
-                        # Summary text
+                                                # Show detected language
+                        lang_display = "en ภาษาอังกฤษ" if result.get("language") == "en" else "🇹🇭 ภาษาไทย"
+                        st.info(f"🌐 ตรวจพบภาษา: {lang_display}")
+                                                # Summary text
                         st.markdown("### 📝 สรุป:")
                         st.info(result["summary"])
                         
@@ -562,7 +621,7 @@ st.divider()
 st.markdown("""
 <div style='text-align: center; color: #6A1B9A; padding: 1.5rem; background: linear-gradient(135deg, #F3E5F5, #E1BEE7); border-radius: 15px; margin: 1rem 0; border: 3px solid #9C27B0;'>
     <p style='font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;'>🚀 ขับเคลื่อนด้วยเทคโนโลยี AI ระดับโลก</p>
-    <p style='font-size: 1rem;'>📚 โมเดล: facebook/bart-large-cnn | 🔧 เฟรมเวิร์ก: FastAPI + Streamlit</p>
+    <p style='font-size: 1rem;'>📚 โมเดล: BART (EN) + mT5 (TH) | 🔧 เฟรมเวิร์ค: FastAPI + Streamlit</p>
     <p style='font-size: 0.9rem; margin-top: 0.5rem; color: #E91E63;'>🌸 ออกแบบด้วยหัวใจคนหนองบัวลำภู - เมืองบัวหลวง 🌸</p>
 </div>
 """, unsafe_allow_html=True)
@@ -573,11 +632,12 @@ with st.expander("ℹ️ เกี่ยวกับ AI Text Summarizer"):
     ### 🤖 เทคโนโลยี
     - **Backend**: FastAPI (Python)
     - **Frontend**: Streamlit
-    - **AI Model**: BART (facebook/bart-large-cnn)
+    - **AI Model**: BART (English) + mT5 (Thai)
     - **ML Library**: Hugging Face Transformers
     
     ### ✨ คุณสมบัติ
-    - สรุปข้อความภาษาอังกฤษอัตโนมัติ
+    - สรุปข้อความภาษาไทยและอังกฤษอัตโนมัติ
+    - ตรวจจับภาษาอัตโนมัติหรือเลือกเอง
     - ปรับความยาวสรุปได้ตามต้องการ
     - แสดงสถิติการบีบอัดข้อมูล
     - ใช้งานง่าย รวดเร็ว
@@ -585,11 +645,12 @@ with st.expander("ℹ️ เกี่ยวกับ AI Text Summarizer"):
     ### 📝 วิธีใช้งาน
     รัน uv run python run.py เพื่อเริ่ม server แล้วเปิดเว็บนี้ จากนั้น:
     1. วางข้อความที่ต้องการสรุป
-    2. ตั้งค่าความยาวตามต้องการ
-    3. กดปุ่ม "สรุปข้อความ"
+    2. เลือกภาษา (หรือตรวจจับอัตโนมัติ)
+    3. ตั้งค่าความยาวตามต้องการ
+    4. กดปุ่ม "สรุปข้อความ"
     
     ### ⚠️ ข้อจำกัด
-    - :red[**รองรับข้อความภาษาอังกฤษเท่านั้น**] (Model limitation)
+    - รองรับภาษาไทยและอังกฤษเท่านั้น
     - การสรุปครั้งแรกอาจใช้เวลานานเพราะต้องโหลดโมเดล
     - คุณภาพของสรุปขึ้นอยู่กับข้อความต้นฉบับ
     """)

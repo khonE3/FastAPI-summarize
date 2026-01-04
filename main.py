@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan events"""
     # Startup
     logger.info("Starting FastAPI Summarize Application...")
-    logger.info(f"Loading model: {settings.MODEL_NAME}")
+    logger.info(f"Loading models: EN={settings.MODEL_NAME_EN}, TH={settings.MODEL_NAME_TH}")
     
     # Pre-load model (optional - will load on first request if not loaded)
     # summarizer_service  # Uncomment to pre-load

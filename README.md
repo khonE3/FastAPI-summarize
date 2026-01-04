@@ -54,9 +54,12 @@ Service class ใช้ Singleton Pattern เพื่อ:
 
 ### 6. **Text Summarization with Transformers**
 ใช้ Hugging Face Transformers library:
-- Model: `facebook/bart-large-cnn` (state-of-the-art summarization)
+- **English Model**: `facebook/bart-large-cnn` (state-of-the-art summarization)
+- **Thai Model**: `csebuetnlp/mT5_multilingual_XLSum` (multilingual T5)
+- **Language Detection**: `langdetect` สำหรับตรวจจับภาษาอัตโนมัติ
 - Pipeline: ใช้ pipeline abstraction สำหรับความง่าย
 - Supports: ปรับ max/min length ได้ตามต้องการ
+- Dual Model System: โหลด 2 โมเดลพร้อมกันเพื่อรองรับทั้งภาษาไทยและอังกฤษ
 
 ---
 
@@ -75,30 +78,33 @@ FastAPI-summarize/
 │   │       └── 📂 endpoints/      # API Endpoints
 │   │           ├── __init__.py
 │   │           ├── health.py      # Health check & status
-│   │           └── summarize.py   # Summarization endpoints
+│   │           └── summarize.py   # Summarization endpoints (bilingual support)
 │   │
 │   ├── 📂 core/                   # Core Configuration
 │   │   ├── __init__.py
-│   │   └── config.py              # App settings & env variables
+│   │   └── config.py              # App settings (MODEL_NAME_EN, MODEL_NAME_TH)
 │   │
 │   ├── 📂 models/                 # Data Models
 │   │   ├── __init__.py
-│   │   └── schemas.py             # Pydantic request/response schemas
+│   │   └── schemas.py             # Pydantic schemas (language parameter support)
 │   │
 │   └── 📂 services/               # Business Logic
 │       ├── __init__.py
-│       └── summarizer.py          # AI summarization service (Singleton)
+│       └── summarizer.py          # Dual-model AI service (BART + mT5)
 │
-├── 📄 main.py                     # FastAPI application entry point
-├── 🎨 frontend.py                 # Streamlit UI (Web Interface) ⭐
-├── 🚀 run.py                      # Unified runner (Backend + Frontend)
+├── 📂 .streamlit/                 # Streamlit Configuration
+│   └── config.toml                # Auto-reload settings (headless mode)
 │
-├── 📦 pyproject.toml              # UV project config & dependencies
+├── 📄 main.py                     # FastAPI entry point (lifespan, CORS, dual-model)
+├── 🎨 frontend.py                 # Streamlit UI (Nong Bua Lamphu Theme) ⭐
+├── 🚀 run.py                      # Unified runner (subprocess management)
+│
+├── 📦 pyproject.toml              # UV dependencies (langdetect, sentencepiece)
 ├── 🔒 uv.lock                     # Locked dependency versions
 │
 ├── 📝 .env.example                # Environment variables template
 ├── 🚫 .gitignore                  # Git ignore rules
-├── 🐍 .python-version             # Python version specification
+├── 🐍 .python-version             # Python version specification (3.13)
 │
 └── 📖 README.md                   # Project documentation (this file)
 ```
@@ -107,14 +113,14 @@ FastAPI-summarize/
 
 | ไฟล์ | หน้าที่ |
 |------|--------|
-| **main.py** | Entry point ของ FastAPI, กำหนด CORS, middleware, routing |
-| **frontend.py** | Streamlit Web UI พร้อม custom CSS และ examples |
-| **run.py** | สคริปต์รันทั้ง backend + frontend พร้อมกัน |
-| **app/api/v1/router.py** | รวม API routes ทั้งหมด |
-| **app/services/summarizer.py** | Singleton service โหลด BART model |
-| **app/models/schemas.py** | Pydantic models สำหรับ validation |
-| **app/core/config.py** | Settings และ environment configuration |
-| **pyproject.toml** | UV dependencies และ project metadata |
+| **main.py** | Entry point ของ FastAPI, กำหนด CORS, middleware, routing, lifespan management |
+| **frontend.py** | Streamlit Web UI พร้อม Nong Bua Lamphu Theme, language selector, custom CSS |
+| **run.py** | สคริปต์รันทั้ง backend + frontend พร้อมกัน (subprocess management) |
+| **app/api/v1/router.py** | รวม API routes ทั้งหมด (health + summarize endpoints) |
+| **app/services/summarizer.py** | Singleton service โหลด 2 โมเดล (BART + mT5) พร้อม language detection |
+| **app/models/schemas.py** | Pydantic models สำหรับ validation (รองรับ language parameter) |
+| **app/core/config.py** | Settings และ environment configuration (MODEL_NAME_EN, MODEL_NAME_TH) |
+| **pyproject.toml** | UV dependencies และ project metadata (รวม langdetect, sentencepiece) |
 
 ---
 
@@ -128,14 +134,14 @@ FastAPI-summarize/
 | **Pydantic** | 2.12.5 | Data Validation & Settings Management |
 | **Transformers** | 4.57.3 | Hugging Face ML/NLP Library |
 | **PyTorch** | 2.9.1 | Deep Learning Framework (Model Backend) |
+| **langdetect** | 1.0.9 | Language Detection Library (Auto-detect TH/EN) |
+| **sentencepiece** | 0.2.0 | Tokenization Library (mT5 requirement) |
 | **UV** | Latest | Ultra-fast Python Package Manager (10-100x เร็วกว่า pip) |
 
 ### 📚 Dependencies เพิ่มเติม:
 - **pydantic-settings** - Environment & Configuration management
 - **python-multipart** - Form data & file uploads support
 - **requests** - HTTP client สำหรับเชื่อมต่อ API
-- **pandas** - Data manipulation (Streamlit dependency)
-- **altair** - Data visualization (Streamlit charts)
 
 ---
 
@@ -200,9 +206,11 @@ uv run streamlit run frontend.py
 5. กดปุ่ม "สรุปข้อความ"
 
 **Features:**
-- ✨ UI สวยงาม ใช้งานง่าย
+- ✨ UI สวยงาม ใช้งานง่าย (Nong Bua Lamphu Theme)
+- 🌐 รองรับภาษาไทยและอังกฤษ
+- 🤖 ตรวจจับภาษาอัตโนมัติ
 - 📊 แสดงสถิติการสรุป
-- 📚 มีตัวอย่างข้อความให้เลือก
+- 📚 มีตัวอย่างข้อความให้เลือก (ทั้งภาษาไทยและอังกฤษ)
 - 🎯 ตรวจสอบสถานะ API อัตโนมัติ
 - 📋 คัดลอกผลลัพธ์ได้
 
@@ -249,7 +257,8 @@ curl http://localhost:8000/api/v1/health
 {
   "text": "string (required, min 10 chars)",
   "max_length": "integer (optional, default: 150)",
-  "min_length": "integer (optional, default: 30)"
+  "min_length": "integer (optional, default: 30)",
+  "language": "string (optional, 'en'|'th'|null for auto-detect)"
 }
 ```
 
@@ -260,7 +269,8 @@ curl http://localhost:8000/api/v1/health
   "summary": "string",
   "original_length": "integer",
   "summary_length": "integer",
-  "compression_ratio": "float"
+  "compression_ratio": "float",
+  "language": "string (detected language: 'en' or 'th')"
 }
 ```
 
@@ -274,7 +284,8 @@ curl http://localhost:8000/api/v1/health
 |----------|---------|-------------|
 | `APP_NAME` | FastAPI Summarize | ชื่อ Application |
 | `DEBUG` | True | Debug mode |
-| `MODEL_NAME` | facebook/bart-large-cnn | Summarization model |
+| `MODEL_NAME_EN` | facebook/bart-large-cnn | English summarization model |
+| `MODEL_NAME_TH` | csebuetnlp/mT5_multilingual_XLSum | Thai summarization model |
 | `MAX_INPUT_LENGTH` | 1024 | ความยาวสูงสุดของ input |
 
 ---
@@ -372,10 +383,11 @@ uv run uvicorn main:app --reload
 
 ## 💡 Tips & Tricks
 
-1. **การสรุปครั้งแรกจะใช้เวลานาน** - โมเดลต้องดาวน์โหลดและโหลดเข้า memory (ประมาณ 1-2 นาที)
-2. **ข้อความภาษาอังกฤษให้ผลลัพธ์ดีที่สุด** - โมเดล BART ถูกเทรนด้วยภาษาอังกฤษ
-3. **ข้อความยาว = สรุปดีกว่า** - ข้อความควรยาวอย่างน้อย 100 คำเพื่อผลลัพธ์ที่ดี
-4. **ปรับ max_length ตามความต้องการ** - ข้อความยาวควรใช้ max_length สูงกว่า
+1. **การสรุปครั้งแรกจะใช้เวลานาน** - โมเดลต้องดาวน์โหลดและโหลดเข้า memory (ประมาณ 2-3 นาที เพราะมี 2 โมเดล)
+2. **รองรับทั้งภาษาไทยและอังกฤษ** - ใช้ BART สำหรับอังกฤษ และ mT5 สำหรับไทย
+3. **ตรวจจับภาษาอัตโนมัติ** - ระบบจะตรวจสอบภาษาอัตโนมัติ หรือเลือกเองได้
+4. **ข้อความยาว = สรุปดีกว่า** - ข้อความควรยาวอย่างน้อย 100 คำเพื่อผลลัพธ์ที่ดี
+5. **ปรับ max_length ตามความต้องการ** - ข้อความยาวควรใช้ max_length สูงกว่า
 
 ---
 
@@ -396,6 +408,12 @@ uv run uvicorn main:app --reload
 
 ### 💾 Model ดาวน์โหลดช้า
 - โมเดล BART มีขนาดประมาณ 1.6 GB
+- โมเดล mT5 มีขนาดประมาณ 2.2 GB
+- รวมทั้งหมด ~3.8 GB
 - ครั้งแรกจะดาวน์โหลดและ cache ไว้
+
+### 🌐 ปัญหาการตรวจจับภาษา
+- ถ้าตรวจจับผิด สามารถเลือกภาษาด้วยตนเองได้ที่ sidebar
+- ข้อความสั้นเกินไปอาจทำให้ตรวจจับผิด (ควรมีอย่างน้อย 20 คำ)
 
 ---

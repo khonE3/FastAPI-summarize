@@ -17,8 +17,9 @@ class Settings(BaseSettings):
     # API
     API_V1_PREFIX: str = "/api/v1"
     
-    # Model
-    MODEL_NAME: str = "facebook/bart-large-cnn"
+    # Models
+    MODEL_NAME_EN: str = "facebook/bart-large-cnn"
+    MODEL_NAME_TH: str = "csebuetnlp/mT5_multilingual_XLSum"
     MAX_INPUT_LENGTH: int = 1024
     MAX_OUTPUT_LENGTH: int = 150
     MIN_OUTPUT_LENGTH: int = 30

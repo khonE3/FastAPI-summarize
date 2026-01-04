@@ -31,23 +31,25 @@ async def summarize_text(request: SummarizeRequest) -> SummarizeResponse:
     """
     try:
         # Summarize the text
-        summary = summarizer_service.summarize(
+        result = summarizer_service.summarize(
             text=request.text,
             max_length=request.max_length,
-            min_length=request.min_length
+            min_length=request.min_length,
+            language=request.language
         )
         
         # Calculate compression ratio
         original_length = len(request.text)
-        summary_length = len(summary)
+        summary_length = len(result["summary"])
         compression_ratio = round(1 - (summary_length / original_length), 2)
         
         return SummarizeResponse(
             original_text=request.text,
-            summary=summary,
+            summary=result["summary"],
             original_length=original_length,
             summary_length=summary_length,
-            compression_ratio=compression_ratio
+            compression_ratio=compression_ratio,
+            language=result["language"]
         )
         
     except Exception as e:
@@ -71,22 +73,24 @@ async def summarize_batch(requests: list[SummarizeRequest]) -> list[SummarizeRes
     results = []
     for req in requests:
         try:
-            summary = summarizer_service.summarize(
+            result = summarizer_service.summarize(
                 text=req.text,
                 max_length=req.max_length,
-                min_length=req.min_length
+                min_length=req.min_length,
+                language=req.language
             )
             
             original_length = len(req.text)
-            summary_length = len(summary)
+            summary_length = len(result["summary"])
             compression_ratio = round(1 - (summary_length / original_length), 2)
             
             results.append(SummarizeResponse(
                 original_text=req.text,
-                summary=summary,
+                summary=result["summary"],
                 original_length=original_length,
                 summary_length=summary_length,
-                compression_ratio=compression_ratio
+                compression_ratio=compression_ratio,
+                language=result["language"]
             ))
         except Exception as e:
             logger.error(f"Error in batch summarization: {e}")
